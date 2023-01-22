@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnseeSharp", "UnseeSharp.csproj", "{093A1B2C-F4D1-444A-A316-187C4FCC5F03}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{093A1B2C-F4D1-444A-A316-187C4FCC5F03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{093A1B2C-F4D1-444A-A316-187C4FCC5F03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{093A1B2C-F4D1-444A-A316-187C4FCC5F03}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{093A1B2C-F4D1-444A-A316-187C4FCC5F03}.Debug|x64.Build.0 = Debug|Any CPU
+		{093A1B2C-F4D1-444A-A316-187C4FCC5F03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{093A1B2C-F4D1-444A-A316-187C4FCC5F03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{093A1B2C-F4D1-444A-A316-187C4FCC5F03}.Release|x64.ActiveCfg = Release|Any CPU
+		{093A1B2C-F4D1-444A-A316-187C4FCC5F03}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2AB3076E-3D89-4DA8-BC69-F8955D516E62}
+	EndGlobalSection
+EndGlobal
