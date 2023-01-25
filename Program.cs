@@ -43,9 +43,10 @@ public class Program
             NumberObfuscation.Process(module);
             ConstantsConfusion.Process(module);
             StringEncryption.Process(module);
+            ConstantMelter.Process(module);
+            ControlFlowObfuscation.Process(module);
             AntiDe4Dot.Process(module);
             AntiILDasm.Process(module);
-            ConstantMelter.Process(module);
             StackUnderflow.Process(module);
             Renamer.Process(module);
             FakeAttributes.Process(module);

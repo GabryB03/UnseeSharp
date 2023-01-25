@@ -65,9 +65,6 @@
       <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="ProtoRandom">
-      <HintPath>..\..\Computer\Developing\Progetti\UnseeSharp\UnseeSharp\bin\Release\ProtoRandom.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
@@ -97,16 +94,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Control Flow Obfuscation\Block.cs" />
+    <Compile Include="Control Flow Obfuscation\BlockParser.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Protections\AntiILDasm.cs" />
     <Compile Include="Protections\AntiManipulation.cs" />
     <Compile Include="Protections\ConstantMelter.cs" />
     <Compile Include="Protections\ConstantsConfusion.cs" />
+    <Compile Include="Control Flow Obfuscation\ControlFlowObfuscation.cs" />
     <Compile Include="Protections\HideStrings.cs" />
     <Compile Include="Protections\NumberObfuscation.cs" />
     <Compile Include="Protections\StackUnderflow.cs" />
     <Compile Include="Protections\StringPooler.cs" />
     <Compile Include="Utils\AntiManipulationRuntime.cs" />
+    <Compile Include="Utils\ProtoRandom.cs" />
     <Compile Include="Utils\StringDecryptor.cs" />
     <Compile Include="Protections\StringEncryption.cs" />
     <Compile Include="Utils\InjectHelper.cs" />

@@ -11,8 +11,9 @@ public class AntiManipulation
         MethodDef cctor = module.EntryPoint.DeclaringType.FindOrCreateStaticConstructor();
         TypeDef typeDef = typeModule.ResolveTypeDef(MDToken.ToRID(typeof(AntiManipulationRuntime).MetadataToken));
         IEnumerable<IDnlibDef> members = InjectHelper.Inject(typeDef, module.EntryPoint.DeclaringType, module);
-        var init = (MethodDef)members.Single(method => method.Name == "RunAll");
-        module.EntryPoint.Body.Instructions.Insert(0, Instruction.Create(OpCodes.Call, init));
+        MethodDef initMethod = (MethodDef)members.Single(method => method.Name == "RunAll");
+        MethodDef antiTamperMethod = (MethodDef)members.Single(method => method.Name == "AntiTamper");
+        module.EntryPoint.Body.Instructions.Insert(0, Instruction.Create(OpCodes.Call, antiTamperMethod));
 
         foreach (TypeDef type in module.Types)
         {
@@ -28,23 +29,18 @@ public class AntiManipulation
                     continue;
                 }
 
+                if (method.MDToken != cctor.MDToken)
+                {
+                    continue;
+                }
+
                 if (method.IsConstructor)
                 {
                     method.Body.Instructions.Insert(0, Instruction.Create(OpCodes.Nop));
-                    method.Body.Instructions.Insert(0, Instruction.Create(OpCodes.Call, init));
+                    method.Body.Instructions.Insert(0, Instruction.Create(OpCodes.Call, initMethod));
+                    method.Body.Instructions.Insert(0, Instruction.Create(OpCodes.Call, antiTamperMethod));
                 }
             }
-        }
-
-        foreach (MethodDef md in module.GlobalType.Methods)
-        {
-            if (md.Name != ".ctor")
-            {
-                continue;
-            }
-
-            module.GlobalType.Remove(md);
-            break;
         }
     }
 }
