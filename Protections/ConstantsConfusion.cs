@@ -194,7 +194,7 @@ public class ConstantsConfusion
                 else if (instruction.OpCode == OpCodes.Ldc_R4)
                 {
                     x++;
-                    MethodDef newMethod = new MethodDefUser("StringPoolingObfuscation_" + x.ToString(), MethodSig.CreateStatic(method.DeclaringType.Module.CorLibTypes.Int32), MethodImplAttributes.IL | MethodImplAttributes.Managed, MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig) { Body = new CilBody() };
+                    MethodDef newMethod = new MethodDefUser("StringPoolingObfuscation_" + x.ToString(), MethodSig.CreateStatic(method.DeclaringType.Module.CorLibTypes.Single), MethodImplAttributes.IL | MethodImplAttributes.Managed, MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig) { Body = new CilBody() };
                     newMethod.Body.Instructions.Add(new Instruction(OpCodes.Nop));
                     newMethod.Body.Instructions.Add(new Instruction(OpCodes.Ldstr, instruction.Operand.ToString()));
                     newMethod.Body.Instructions.Add(new Instruction(OpCodes.Call, module.Import(typeof(System.Convert).GetMethod("ToSingle", new Type[] { typeof(string) }))));
@@ -206,7 +206,7 @@ public class ConstantsConfusion
                 else if (instruction.OpCode == OpCodes.Ldc_R8)
                 {
                     x++;
-                    MethodDef newMethod = new MethodDefUser("StringPoolingObfuscation_" + x.ToString(), MethodSig.CreateStatic(method.DeclaringType.Module.CorLibTypes.Int32), MethodImplAttributes.IL | MethodImplAttributes.Managed, MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig) { Body = new CilBody() };
+                    MethodDef newMethod = new MethodDefUser("StringPoolingObfuscation_" + x.ToString(), MethodSig.CreateStatic(method.DeclaringType.Module.CorLibTypes.Double), MethodImplAttributes.IL | MethodImplAttributes.Managed, MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig) { Body = new CilBody() };
                     newMethod.Body.Instructions.Add(new Instruction(OpCodes.Nop));
                     newMethod.Body.Instructions.Add(new Instruction(OpCodes.Ldstr, instruction.Operand.ToString()));
                     newMethod.Body.Instructions.Add(new Instruction(OpCodes.Call, module.Import(typeof(System.Convert).GetMethod("ToDouble", new Type[] { typeof(string) }))));
