@@ -103,10 +103,13 @@
     <Compile Include="Protections\ConstantsConfusion.cs" />
     <Compile Include="Control Flow Obfuscation\ControlFlowObfuscation.cs" />
     <Compile Include="Protections\HideStrings.cs" />
+    <Compile Include="Protections\LocalsToFields.cs" />
+    <Compile Include="Protections\MoveEntryPoint.cs" />
     <Compile Include="Protections\NumberObfuscation.cs" />
     <Compile Include="Protections\StackUnderflow.cs" />
     <Compile Include="Protections\StringPooler.cs" />
     <Compile Include="Utils\AntiManipulationRuntime.cs" />
+    <Compile Include="Utils\NameGenerator.cs" />
     <Compile Include="Utils\ProtoRandom.cs" />
     <Compile Include="Utils\StringDecryptor.cs" />
     <Compile Include="Protections\StringEncryption.cs" />

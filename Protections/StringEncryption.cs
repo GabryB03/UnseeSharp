@@ -20,8 +20,13 @@ public static class StringEncryption
         {
             foreach (MethodDef method in type.Methods)
             {
-                if (method.Body == null) continue;
+                if (method.Body == null)
+                {
+                    continue;
+                }
+
                 method.Body.SimplifyBranches();
+
                 for (int i = 0; i < method.Body.Instructions.Count; i++)
                 {
                     if (method.Body.Instructions[i].OpCode == OpCodes.Ldstr)
@@ -115,7 +120,6 @@ public static class StringEncryption
         }
 
         initMethod.Name = "UNSEESHARP_OBFUSCATOR_STRING_ENCRYPTION_KEY_OBFUSCATION";
-
         return initMethod;
     }
 }

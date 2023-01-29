@@ -34,8 +34,6 @@ public class HideStrings
             module.MachineType = MachineType.Amd64;
         }
 
-        int x = 1;
-
         foreach (TypeDefinition type in module.GetAllTypes())
         {
             foreach (MethodDefinition method in type.Methods)
@@ -66,8 +64,7 @@ public class HideStrings
                         instruction.OpCode = CilOpCodes.Call;
                         instruction.Operand = newNativeMethod;
                         method.CilMethodBody.Instructions.Insert(++i, new CilInstruction(CilOpCodes.Newobj, importer.ImportMethod(typeof(string).GetConstructor(new[] { typeof(sbyte*) }))));
-                        method.Name = "SkidYouCanNotReadStrings_" + x;
-                        x++;
+                        method.Name = NameGenerator.GenerateName();
                     }
                 }
                 catch
@@ -88,7 +85,7 @@ public class HideStrings
         }
 
         CorLibTypeFactory factory = originalModule.CorLibTypeFactory;
-        string methodName = Guid.NewGuid().ToString();
+        string methodName = NameGenerator.GenerateName();
         MethodDefinition method = new MethodDefinition(methodName, MethodAttributes.Public | MethodAttributes.Static, MethodSignature.CreateStatic(factory.SByte.MakePointerType()));
         method.ImplAttributes |= MethodImplAttributes.Native | MethodImplAttributes.Unmanaged | MethodImplAttributes.PreserveSig;
         method.Attributes |= MethodAttributes.PInvokeImpl;

@@ -39,6 +39,7 @@ public class Program
             options.MetadataOptions.Flags = MetadataFlags.KeepOldMaxStack | MetadataFlags.PreserveAll;
             options.Cor20HeaderOptions.Flags = dnlib.DotNet.MD.ComImageFlags.ILOnly;
 
+            MoveEntryPoint.Process(module);
             AntiManipulation.Process(module);
             NumberObfuscation.Process(module);
             ConstantsConfusion.Process(module);
@@ -50,6 +51,7 @@ public class Program
             StackUnderflow.Process(module);
             Renamer.Process(module);
             FakeAttributes.Process(module);
+            LocalsToFields.Process(module);
 
             module.Write(stringsPath, options);
             module.Dispose();
@@ -75,6 +77,7 @@ public class Program
         catch (Exception ex)
         {
             Logger.LogError("Failed to obfuscate your file:\r\n" + ex.Message + "\r\n" + ex.StackTrace + "\r\n" + ex.Source);
+            Console.ReadLine();
         }
     }
 

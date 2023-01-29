@@ -1,6 +1,5 @@
 ﻿using dnlib.DotNet;
 using dnlib.DotNet.Emit;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -33,42 +32,6 @@ public class ControlFlowObfuscation
                 ExecuteMethod(meth);
             }
         }
-
-        foreach (TypeDef type in module.Types)
-        {
-            foreach (MethodDef meth in type.Methods.ToArray())
-            {
-                if (!meth.HasBody || !meth.Body.HasInstructions || meth.Body.HasExceptionHandlers)
-                {
-                    continue;
-                }
-
-                for (int i = 0; i < meth.Body.Instructions.Count - 2; i++)
-                {
-                    Instruction inst = meth.Body.Instructions[i + 1];
-
-                    if (inst.OpCode.Equals(OpCodes.Call))
-                    {
-                        string str = inst.Operand.ToString();
-                        
-                        if (str == "System.Void Microsoft.VisualBasic.VBMath::Randomize()")
-                        {
-                            meth.Body.Instructions.Insert(i + 1, Instruction.Create(OpCodes.Ldstr, "a"));
-                            meth.Body.Instructions.Insert(i + 1, Instruction.Create(OpCodes.Br_S, inst));
-                            i += 2;
-                        }
-                        else
-                        {
-                            i++;
-                        }
-                    }
-                    else
-                    {
-                        i++;
-                    }
-                }
-            }
-        }
     }
 
     private static void ExecuteMethod(MethodDef meth)
@@ -93,7 +56,6 @@ public class ControlFlowObfuscation
 
         foreach (Block block in blocks.Where(block => block != blocks.Single(x => x.Number == blocks.Count - 1)))
         {
-            meth.Body.Instructions.Add(Instruction.Create(OpCodes.Call, meth.Module.Import(typeof(Microsoft.VisualBasic.VBMath).GetMethod("Randomize", new Type[] { }))));
             meth.Body.Instructions.Add(Instruction.Create(OpCodes.Ldloc, local));
 
             foreach (Instruction instruction in Calc(block.Number))
