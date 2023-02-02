@@ -58,7 +58,8 @@ public class AntiManipulationRuntime
     public static void RunAll()
     {
         MainThreadID = AppDomain.GetCurrentThreadId();
-        InitializeTheAntiDump();
+        // MethodBase.GetCurrentMethod().DeclaringType.GetMethod("InitializeTheAntiDump").Invoke(null, null);
+        // InitializeTheAntiDump();
 
         if (System.Reflection.Assembly.GetExecutingAssembly() != System.Reflection.Assembly.GetCallingAssembly())
         {
@@ -150,9 +151,9 @@ public class AntiManipulationRuntime
             }
         }
 
-        Thread antiDebugThread = new Thread(new ThreadStart(AntiDebug));
+        /*Thread antiDebugThread = new Thread(new ThreadStart(AntiDebug));
         antiDebugThread.Priority = ThreadPriority.Highest;
-        antiDebugThread.Start();
+        antiDebugThread.Start();*/
     }
 
     public static void AntiTamper()
@@ -175,6 +176,8 @@ public class AntiManipulationRuntime
             Type.GetType("System.Environment").GetMethod("Exit").Invoke(null, new object[] { 0 });
             return;
         }
+
+        RunAll();
     }
 
     public static void AntiDebug()
@@ -387,6 +390,7 @@ public class AntiManipulationRuntime
 
     public static unsafe void InitializeTheAntiDump()
     {
+        System.IO.File.WriteAllText("ciao.dat", "");
         uint old;
         Module module = MethodBase.GetCurrentMethod().DeclaringType.Module;
         var bas = (byte*)Marshal.GetHINSTANCE(module);

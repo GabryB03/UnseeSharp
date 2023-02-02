@@ -39,12 +39,15 @@ public class Program
             options.MetadataOptions.Flags = MetadataFlags.KeepOldMaxStack | MetadataFlags.PreserveAll;
             options.Cor20HeaderOptions.Flags = dnlib.DotNet.MD.ComImageFlags.ILOnly;
 
+            ImportProtection.Process(module);
             MoveEntryPoint.Process(module);
             AntiManipulation.Process(module);
             NumberObfuscation.Process(module);
             ConstantsConfusion.Process(module);
             StringEncryption.Process(module);
             ConstantMelter.Process(module);
+            LocalsToFields.Process(module);
+            SuperControlFlowObfuscation.Process(module);
             ControlFlowObfuscation.Process(module);
             AntiDe4Dot.Process(module);
             AntiILDasm.Process(module);
@@ -53,7 +56,6 @@ public class Program
             LimitedIntegerConfusion.Process(module);
             Renamer.Process(module);
             FakeAttributes.Process(module);
-            LocalsToFields.Process(module);
 
             module.Write(stringsPath, options);
             module.Dispose();

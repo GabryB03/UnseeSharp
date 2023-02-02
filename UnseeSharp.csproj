@@ -99,6 +99,7 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Protections\AntiILDasm.cs" />
     <Compile Include="Protections\AntiManipulation.cs" />
+    <Compile Include="Protections\ImportProtection.cs" />
     <Compile Include="Protections\LimitedCallProtection.cs" />
     <Compile Include="Protections\ConstantMelter.cs" />
     <Compile Include="Protections\ConstantsConfusion.cs" />
@@ -110,6 +111,12 @@
     <Compile Include="Protections\NumberObfuscation.cs" />
     <Compile Include="Protections\StackUnderflow.cs" />
     <Compile Include="Protections\StringPooler.cs" />
+    <Compile Include="Super Control Flow Obfuscation\ControlFlow.cs" />
+    <Compile Include="Super Control Flow Obfuscation\ControlFlowGraph.cs" />
+    <Compile Include="Super Control Flow Obfuscation\Predicate.cs" />
+    <Compile Include="Protections\SuperControlFlowObfuscation.cs" />
+    <Compile Include="Super Control Flow Obfuscation\SwitchMangler.cs" />
+    <Compile Include="Super Control Flow Obfuscation\Utils.cs" />
     <Compile Include="Utils\AntiManipulationRuntime.cs" />
     <Compile Include="Utils\NameGenerator.cs" />
     <Compile Include="Utils\ProtoRandom.cs" />
