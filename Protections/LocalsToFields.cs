@@ -1,4 +1,6 @@
-﻿using dnlib.DotNet.Emit;
+﻿/// Source & Credits to: https://github.com/Sato-Isolated/MindLated/blob/master/Protection/LocalF/L2F.cs
+
+using dnlib.DotNet.Emit;
 using dnlib.DotNet;
 using System.Collections.Generic;
 using System.Linq;

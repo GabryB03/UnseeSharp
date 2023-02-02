@@ -49,6 +49,8 @@ public class Program
             AntiDe4Dot.Process(module);
             AntiILDasm.Process(module);
             StackUnderflow.Process(module);
+            LimitedCallProtection.Process(module);
+            LimitedIntegerConfusion.Process(module);
             Renamer.Process(module);
             FakeAttributes.Process(module);
             LocalsToFields.Process(module);

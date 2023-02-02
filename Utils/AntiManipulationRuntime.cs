@@ -388,7 +388,7 @@ public class AntiManipulationRuntime
     public static unsafe void InitializeTheAntiDump()
     {
         uint old;
-        Module module = typeof(AntiManipulationRuntime).Module;
+        Module module = MethodBase.GetCurrentMethod().DeclaringType.Module;
         var bas = (byte*)Marshal.GetHINSTANCE(module);
         byte* ptr = bas + 0x3c;
         byte* ptr2;

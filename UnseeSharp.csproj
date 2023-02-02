@@ -99,10 +99,12 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Protections\AntiILDasm.cs" />
     <Compile Include="Protections\AntiManipulation.cs" />
+    <Compile Include="Protections\LimitedCallProtection.cs" />
     <Compile Include="Protections\ConstantMelter.cs" />
     <Compile Include="Protections\ConstantsConfusion.cs" />
     <Compile Include="Control Flow Obfuscation\ControlFlowObfuscation.cs" />
     <Compile Include="Protections\HideStrings.cs" />
+    <Compile Include="Protections\LimitedIntegerConfusion.cs" />
     <Compile Include="Protections\LocalsToFields.cs" />
     <Compile Include="Protections\MoveEntryPoint.cs" />
     <Compile Include="Protections\NumberObfuscation.cs" />

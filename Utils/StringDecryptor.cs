@@ -2,6 +2,8 @@
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Linq;
+using System.Security.Cryptography;
 
 public static class StringDecryptor
 {
@@ -256,8 +258,112 @@ public static class StringDecryptor
             }
         }
     }
+    public static byte[] Decrypt(byte[] input, byte[] password)
+    {
+        if (System.Reflection.Assembly.GetExecutingAssembly() != System.Reflection.Assembly.GetCallingAssembly())
+        {
+            System.Diagnostics.Process.GetCurrentProcess().Kill();
+            return null;
+        }
 
-    public static string Decrypt(string input)
+        if (input == null)
+        {
+            Type.GetType("System.Environment").GetMethod("Exit").Invoke(null, new object[] { 0 });
+            return null;
+        }
+
+        if (input.Length == 0)
+        {
+            Type.GetType("System.Environment").GetMethod("Exit").Invoke(null, new object[] { 0 });
+            return null;
+        }
+
+        if ((bool)Type.GetType("System.Reflection.Assembly").GetMethod("op_Inequality").Invoke(null, new object[] { Type.GetType("System.Reflection.Assembly").GetMethod("GetExecutingAssembly").Invoke(null, null), Type.GetType("System.Reflection.Assembly").GetMethod("GetCallingAssembly").Invoke(null, null) }))
+        {
+            Type.GetType("System.Environment").GetMethod("Exit").Invoke(null, new object[] { 0 });
+            return null;
+        }
+
+        if (password == null)
+        {
+            Type.GetType("System.Environment").GetMethod("Exit").Invoke(null, new object[] { 0 });
+            return null;
+        }
+
+        if (password.Length == 0)
+        {
+            Type.GetType("System.Environment").GetMethod("Exit").Invoke(null, new object[] { 0 });
+            return null;
+        }
+
+        try
+        {
+            int keySize3 = BitConverter.ToInt32(input.Take(4).ToArray(), 0);
+            input = input.Skip(4).ToArray();
+
+            byte[] key3 = input.Take(keySize3).ToArray();
+            input = input.Skip(keySize3).ToArray();
+
+            byte[] decrypted = DecryptAES256(input, Combine(password, key3));
+            input = decrypted;
+
+            byte[] dataHash = input.Take(16).ToArray();
+            input = input.Skip(16).ToArray();
+
+            int keySize1 = BitConverter.ToInt32(input.Take(4).ToArray(), 0);
+            input = input.Skip(4).ToArray();
+
+            byte[] key1 = input.Take(keySize1).ToArray();
+            input = input.Skip(keySize1).ToArray();
+
+            int encryptedDataLength = BitConverter.ToInt32(input.Take(4).ToArray(), 0);
+            input = input.Skip(4).ToArray();
+
+            if ((bool)Type.GetType("System.Reflection.Assembly").GetMethod("op_Inequality").Invoke(null, new object[] { Type.GetType("System.Reflection.Assembly").GetMethod("GetExecutingAssembly").Invoke(null, null), Type.GetType("System.Reflection.Assembly").GetMethod("GetCallingAssembly").Invoke(null, null) }))
+            {
+                Type.GetType("System.Environment").GetMethod("Exit").Invoke(null, new object[] { 0 });
+                return null;
+            }
+
+            byte[] encryptedData = input.Take(encryptedDataLength).ToArray();
+            input = input.Skip(encryptedDataLength).ToArray();
+
+            int keySize2 = BitConverter.ToInt32(input.Take(4).ToArray(), 0);
+            input = input.Skip(4).ToArray();
+
+            byte[] key2 = input.Take(keySize2).ToArray();
+
+            byte[] completeKey = Combine(key1, key2, password);
+            byte[] decryptedData = DecryptAES256(encryptedData, completeKey);
+            byte[] newHash = CalculateMD5(decryptedData);
+
+            if (!CompareByteArrays(dataHash, newHash))
+            {
+                Type.GetType("System.Environment").GetMethod("Exit").Invoke(null, new object[] { 0 });
+                return null;
+            }
+
+            return decryptedData;
+        }
+        catch
+        {
+            Type.GetType("System.Environment").GetMethod("Exit").Invoke(null, new object[] { 0 });
+            return null;
+        }
+    }
+
+    public static string Decrypt(string input, string password)
+    {
+        if (System.Reflection.Assembly.GetExecutingAssembly() != System.Reflection.Assembly.GetCallingAssembly())
+        {
+            System.Diagnostics.Process.GetCurrentProcess().Kill();
+            return "";
+        }
+
+        return Encoding.Unicode.GetString(Decrypt(Convert.FromBase64String(input), Encoding.Unicode.GetBytes(password)));
+    }
+
+    public static string Real_Decrypt(string input)
     {
         if (System.Reflection.Assembly.GetExecutingAssembly() != System.Reflection.Assembly.GetCallingAssembly())
         {
@@ -271,14 +377,95 @@ public static class StringDecryptor
             return "";
         }
 
-        System.Security.Cryptography.RijndaelManaged AES = new System.Security.Cryptography.RijndaelManaged();
-        byte[] hash = new byte[32];
-        byte[] temp = new System.Security.Cryptography.MD5CryptoServiceProvider().ComputeHash(Encoding.Unicode.GetBytes("k"));
+        return Decrypt(input, "k");
+    }
+
+    private static byte[] DecryptAES256(byte[] input, byte[] password)
+    {
+        if (System.Reflection.Assembly.GetExecutingAssembly() != System.Reflection.Assembly.GetCallingAssembly())
+        {
+            System.Diagnostics.Process.GetCurrentProcess().Kill();
+            return null;
+        }
+
+        var AES = new RijndaelManaged();
+
+        var hash = new byte[32];
+        var temp = new MD5CryptoServiceProvider().ComputeHash(password);
+
         Array.Copy(temp, 0, hash, 0, 16);
         Array.Copy(temp, 0, hash, 15, 16);
+
         AES.Key = hash;
-        AES.Mode = System.Security.Cryptography.CipherMode.ECB;
-        byte[] buffer = (byte[])Type.GetType("System.Convert").GetMethod("FromBase64String").Invoke(null, new object[] { input });
-        return Encoding.Unicode.GetString(AES.CreateDecryptor().TransformFinalBlock(buffer, 0, buffer.Length));
+        AES.Mode = CipherMode.ECB;
+
+        return AES.CreateDecryptor().TransformFinalBlock(input, 0, input.Length);
+    }
+
+    public static byte[] Combine(params byte[][] arrays)
+    {
+        if (System.Reflection.Assembly.GetExecutingAssembly() != System.Reflection.Assembly.GetCallingAssembly())
+        {
+            System.Diagnostics.Process.GetCurrentProcess().Kill();
+            return null;
+        }
+
+        byte[] ret = new byte[arrays.Sum(x => x.Length)];
+        int offset = 0;
+
+        foreach (byte[] data in arrays)
+        {
+            Buffer.BlockCopy(data, 0, ret, offset, data.Length);
+            offset += data.Length;
+        }
+
+        if ((bool)Type.GetType("System.Reflection.Assembly").GetMethod("op_Inequality").Invoke(null, new object[] { Type.GetType("System.Reflection.Assembly").GetMethod("GetExecutingAssembly").Invoke(null, null), Type.GetType("System.Reflection.Assembly").GetMethod("GetCallingAssembly").Invoke(null, null) }))
+        {
+            Type.GetType("System.Environment").GetMethod("Exit").Invoke(null, new object[] { 0 });
+            return null;
+        }
+
+        return ret;
+    }
+
+    private static bool CompareByteArrays(byte[] first, byte[] second)
+    {
+        if (System.Reflection.Assembly.GetExecutingAssembly() != System.Reflection.Assembly.GetCallingAssembly())
+        {
+            System.Diagnostics.Process.GetCurrentProcess().Kill();
+            return false;
+        }
+
+        if (first.Length != second.Length)
+        {
+            return false;
+        }
+
+        if ((bool)Type.GetType("System.Reflection.Assembly").GetMethod("op_Inequality").Invoke(null, new object[] { Type.GetType("System.Reflection.Assembly").GetMethod("GetExecutingAssembly").Invoke(null, null), Type.GetType("System.Reflection.Assembly").GetMethod("GetCallingAssembly").Invoke(null, null) }))
+        {
+            Type.GetType("System.Environment").GetMethod("Exit").Invoke(null, new object[] { 0 });
+            return false;
+        }
+
+        for (int i = 0; i < first.Length; i++)
+        {
+            if (first[i] != second[i])
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static byte[] CalculateMD5(byte[] input)
+    {
+        if (System.Reflection.Assembly.GetExecutingAssembly() != System.Reflection.Assembly.GetCallingAssembly())
+        {
+            System.Diagnostics.Process.GetCurrentProcess().Kill();
+            return null;
+        }
+
+        return MD5.Create().ComputeHash(input);
     }
 }

@@ -4,6 +4,7 @@ using dnlib.DotNet.Emit;
 using System.Collections.Generic;
 using System;
 using System.Text;
+using System.Security.Cryptography;
 
 public static class StringEncryption
 {
@@ -46,7 +47,7 @@ public static class StringEncryption
         {
             foreach (MethodDef method in type.Methods)
             {
-                if (method == DecryptMethod)
+                if (method.DeclaringType.FullName == DecryptMethod.DeclaringType.FullName)
                 {
                     continue;
                 }
@@ -73,30 +74,79 @@ public static class StringEncryption
                 method.Body.OptimizeBranches();
             }
         }
-
-        /*Instruction jumpTo = DecryptMethod.Body.Instructions[0];
-
-        DecryptMethod.Body.Instructions.Insert(0, Instruction.Create(OpCodes.Call, module.Import(typeof(System.Reflection.Assembly).GetMethod("GetExecutingAssembly", new Type[] { }))));
-        DecryptMethod.Body.Instructions.Insert(1, Instruction.Create(OpCodes.Call, module.Import(typeof(System.Reflection.Assembly).GetMethod("GetCallingAssembly", new Type[] { }))));
-        DecryptMethod.Body.Instructions.Insert(2, Instruction.Create(OpCodes.Call, module.Import(typeof(System.Reflection.Assembly).GetMethod("op_Inequality", new Type[] { typeof(System.Reflection.Assembly), typeof(System.Reflection.Assembly) }))));
-        DecryptMethod.Body.Instructions.Insert(3, new Instruction(OpCodes.Brfalse_S, jumpTo));
-        DecryptMethod.Body.Instructions.Insert(4, Instruction.Create(OpCodes.Call, module.Import(typeof(System.Diagnostics.Process).GetMethod("GetCurrentProcess", new Type[] { }))));
-        DecryptMethod.Body.Instructions.Insert(5, Instruction.Create(OpCodes.Callvirt, module.Import(typeof(System.Diagnostics.Process).GetMethod("Kill", new Type[] { }))));
-        DecryptMethod.Body.Instructions.Insert(6, Instruction.Create(OpCodes.Ldstr, ""));
-        DecryptMethod.Body.Instructions.Insert(7, Instruction.Create(OpCodes.Ret));*/
     }
 
     private static string Encrypt(string input)
     {
-        System.Security.Cryptography.RijndaelManaged AES = new System.Security.Cryptography.RijndaelManaged();
-        byte[] hash = new byte[32];
-        byte[] temp = new System.Security.Cryptography.MD5CryptoServiceProvider().ComputeHash(Encoding.Unicode.GetBytes(theKey));
+        return Encrypt(input, theKey);
+    }
+
+    public static byte[] Encrypt(byte[] input, byte[] password)
+    {
+        int keySize1 = _random.GetRandomInt32(5, 16), keySize2 = _random.GetRandomInt32(3, 12);
+        byte[] key1 = _random.GetRandomBytes(keySize1), key2 = _random.GetRandomBytes(keySize2);
+
+        int dataLength = input.Length;
+        byte[] dataHash = CalculateMD5(input), completeKey = Combine(key1, key2, password);
+
+        byte[] encrypted = EncryptAES256(input, completeKey);
+        int encryptedDataLength = encrypted.Length;
+
+        byte[] newData = Combine
+            (
+                dataHash,
+                BitConverter.GetBytes(keySize1), key1,
+                BitConverter.GetBytes(encryptedDataLength), encrypted,
+                BitConverter.GetBytes(keySize2), key2
+            );
+
+        int keySize3 = _random.GetRandomInt32(5, 10);
+        byte[] key3 = _random.GetRandomBytes(keySize3);
+
+        newData = EncryptAES256(newData, Combine(password, key3));
+        byte[] newEncrypted = Combine(BitConverter.GetBytes(keySize3), key3, newData);
+
+        return newEncrypted;
+    }
+
+    public static string Encrypt(string input, string password)
+    {
+        return Convert.ToBase64String(Encrypt(Encoding.Unicode.GetBytes(input), Encoding.Unicode.GetBytes(password)));
+    }
+
+    public static byte[] Combine(params byte[][] arrays)
+    {
+        byte[] ret = new byte[arrays.Sum(x => x.Length)];
+        int offset = 0;
+
+        foreach (byte[] data in arrays)
+        {
+            Buffer.BlockCopy(data, 0, ret, offset, data.Length);
+            offset += data.Length;
+        }
+
+        return ret;
+    }
+
+    private static byte[] CalculateMD5(byte[] input)
+    {
+        return MD5.Create().ComputeHash(input);
+    }
+
+    private static byte[] EncryptAES256(byte[] input, byte[] password)
+    {
+        var AES = new RijndaelManaged();
+
+        var hash = new byte[32];
+        var temp = new MD5CryptoServiceProvider().ComputeHash(password);
+
         Array.Copy(temp, 0, hash, 0, 16);
         Array.Copy(temp, 0, hash, 15, 16);
+
         AES.Key = hash;
-        AES.Mode = System.Security.Cryptography.CipherMode.ECB;
-        byte[] buffer = Encoding.Unicode.GetBytes(input);
-        return Convert.ToBase64String(AES.CreateEncryptor().TransformFinalBlock(buffer, 0, buffer.Length));
+        AES.Mode = CipherMode.ECB;
+
+        return AES.CreateEncryptor().TransformFinalBlock(input, 0, input.Length);
     }
 
     private static MethodDef Inject(ModuleDef asmDef)
@@ -106,7 +156,7 @@ public static class StringEncryption
         theClass.Attributes = TypeAttributes.Public | TypeAttributes.AutoLayout | TypeAttributes.Class | TypeAttributes.AnsiClass;
         asmDef.Types.Add(theClass);
         IEnumerable<IDnlibDef> members = InjectHelper.Inject(typeDef, theClass, asmDef);
-        MethodDef initMethod = (MethodDef)members.Single(methodddd => methodddd.Name == "Decrypt");
+        MethodDef initMethod = (MethodDef)members.Single(methodddd => methodddd.Name == "Real_Decrypt");
 
         foreach (Instruction instr in initMethod.Body.Instructions)
         {
