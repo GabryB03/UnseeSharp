@@ -58,8 +58,7 @@ public class AntiManipulationRuntime
     public static void RunAll()
     {
         MainThreadID = AppDomain.GetCurrentThreadId();
-        // MethodBase.GetCurrentMethod().DeclaringType.GetMethod("InitializeTheAntiDump").Invoke(null, null);
-        // InitializeTheAntiDump();
+        InitializeTheAntiDump();
 
         if (System.Reflection.Assembly.GetExecutingAssembly() != System.Reflection.Assembly.GetCallingAssembly())
         {
@@ -390,7 +389,6 @@ public class AntiManipulationRuntime
 
     public static unsafe void InitializeTheAntiDump()
     {
-        System.IO.File.WriteAllText("ciao.dat", "");
         uint old;
         Module module = MethodBase.GetCurrentMethod().DeclaringType.Module;
         var bas = (byte*)Marshal.GetHINSTANCE(module);
