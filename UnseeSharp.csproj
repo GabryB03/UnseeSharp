@@ -106,7 +106,6 @@
     <Compile Include="Control Flow Obfuscation\ControlFlowObfuscation.cs" />
     <Compile Include="Protections\HideStrings.cs" />
     <Compile Include="Protections\LimitedIntegerConfusion.cs" />
-    <Compile Include="Protections\LocalsToFields.cs" />
     <Compile Include="Protections\MoveEntryPoint.cs" />
     <Compile Include="Protections\NumberObfuscation.cs" />
     <Compile Include="Protections\StackUnderflow.cs" />

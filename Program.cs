@@ -46,7 +46,6 @@ public class Program
             ConstantsConfusion.Process(module);
             StringEncryption.Process(module);
             ConstantMelter.Process(module);
-            LocalsToFields.Process(module);
             SuperControlFlowObfuscation.Process(module);
             ControlFlowObfuscation.Process(module);
             AntiDe4Dot.Process(module);

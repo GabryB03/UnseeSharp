@@ -36,6 +36,9 @@ public class AntiManipulationRuntime
     [DllImport("ntdll.dll", SetLastError = true, ExactSpelling = true)]
     private static extern IntPtr NtQueryInformationProcess([In] IntPtr ProcessHandle, int ProcessInformationClass, out IntPtr ProcessInformation, [In] int ProcessInformationLength, [Optional] out int ReturnLength);
 
+    [DllImport("ntdll.dll")]
+    public static extern IntPtr NtQuerySystemInformation(uint SystemInformationClass, IntPtr SystemInformation, uint SystemInformationLength, out uint ReturnLength);
+
     internal enum MemoryProtection
     {
         ExecuteReadWrite = 0x40,
@@ -150,9 +153,9 @@ public class AntiManipulationRuntime
             }
         }
 
-        /*Thread antiDebugThread = new Thread(new ThreadStart(AntiDebug));
+        Thread antiDebugThread = new Thread(new ThreadStart(AntiDebug));
         antiDebugThread.Priority = ThreadPriority.Highest;
-        antiDebugThread.Start();*/
+        antiDebugThread.Start();
     }
 
     public static void AntiTamper()
@@ -305,6 +308,11 @@ public class AntiManipulationRuntime
                 Type.GetType("System.Environment").GetMethod("Exit").Invoke(null, new object[] { 0 });
                 return;
             }
+            else if (CheckKernelDebugInformation())
+            {
+                Type.GetType("System.Environment").GetMethod("Exit").Invoke(null, new object[] { 0 });
+                return;
+            }
 
             try
             {
@@ -367,6 +375,28 @@ public class AntiManipulationRuntime
         var isDebuggerPresent = false;
         var bApiRet = CheckRemoteDebuggerPresent(Process.GetCurrentProcess().Handle, ref isDebuggerPresent);
         return bApiRet && isDebuggerPresent;
+    }
+
+    struct SYSTEM_KERNEL_DEBUGGER_INFORMATION
+    {
+        public bool KernelDebuggerEnabled;
+        public bool KernelDebuggerNotPresent;
+    }
+
+    private static bool CheckKernelDebugInformation()
+    {
+        SYSTEM_KERNEL_DEBUGGER_INFORMATION pSKDI;
+        uint retLength;
+
+        unsafe
+        {
+            if (NtQuerySystemInformation(0x23, new IntPtr(&pSKDI), (uint) Marshal.SizeOf(pSKDI), out retLength) == new IntPtr(0x00000000))
+            {
+                return pSKDI.KernelDebuggerEnabled && !pSKDI.KernelDebuggerNotPresent;
+            }
+        }
+
+        return false;
     }
 
     public static bool IsFunctionPatched(string library, string functionName)
