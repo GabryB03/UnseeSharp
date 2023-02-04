@@ -1,5 +1,6 @@
 ﻿using dnlib.DotNet;
 using dnlib.DotNet.Emit;
+using System;
 using System.Linq;
 
 public class LimitedCallProtection
@@ -25,8 +26,6 @@ public class LimitedCallProtection
                     continue;
                 }
 
-                int steps = 1;
-
                 for (int i = 0; i < method.Body.Instructions.Count - 1; i++)
                 {
                     if (method.Body.Instructions[i].ToString().Contains("ISupportInitialize") || method.Body.Instructions[i].OpCode != OpCodes.Call && method.Body.Instructions[i].OpCode != OpCodes.Callvirt && method.Body.Instructions[i].OpCode != OpCodes.Ldloc_S)
@@ -39,22 +38,21 @@ public class LimitedCallProtection
                         continue;
                     }
 
-                    if (steps > 1)
+                    try
                     {
-                        try
+                        MemberRef calliMember = (MemberRef)method.Body.Instructions[i].Operand;
+
+                        if (calliMember.FullName.Contains("System.Type"))
                         {
-                            MemberRef calliMember = (MemberRef)method.Body.Instructions[i].Operand;
                             method.Body.Instructions[i].OpCode = OpCodes.Calli;
                             method.Body.Instructions[i].Operand = calliMember.MethodSig;
                             method.Body.Instructions.Insert(i, Instruction.Create(OpCodes.Ldftn, calliMember));
                         }
-                        catch
-                        {
-
-                        }
                     }
+                    catch
+                    {
 
-                    steps++;
+                    }
                 }
             }
         }

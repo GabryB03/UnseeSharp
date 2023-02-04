@@ -37,26 +37,26 @@
     <ApplicationIcon>seesharp.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AsmResolver, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\AsmResolver.5.0.0\lib\netstandard2.0\AsmResolver.dll</HintPath>
+    <Reference Include="AsmResolver, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\AsmResolver.5.1.0\lib\netstandard2.0\AsmResolver.dll</HintPath>
     </Reference>
-    <Reference Include="AsmResolver.DotNet, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\AsmResolver.DotNet.5.0.0\lib\netstandard2.0\AsmResolver.DotNet.dll</HintPath>
+    <Reference Include="AsmResolver.DotNet, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\AsmResolver.DotNet.5.1.0\lib\netstandard2.0\AsmResolver.DotNet.dll</HintPath>
     </Reference>
-    <Reference Include="AsmResolver.DotNet.Dynamic, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\AsmResolver.DotNet.Dynamic.5.0.0\lib\netstandard2.0\AsmResolver.DotNet.Dynamic.dll</HintPath>
+    <Reference Include="AsmResolver.DotNet.Dynamic, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\AsmResolver.DotNet.Dynamic.5.1.0\lib\netstandard2.0\AsmResolver.DotNet.Dynamic.dll</HintPath>
     </Reference>
-    <Reference Include="AsmResolver.PE, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\AsmResolver.PE.5.0.0\lib\netstandard2.0\AsmResolver.PE.dll</HintPath>
+    <Reference Include="AsmResolver.PE, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\AsmResolver.PE.5.1.0\lib\netstandard2.0\AsmResolver.PE.dll</HintPath>
     </Reference>
-    <Reference Include="AsmResolver.PE.File, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\AsmResolver.PE.File.5.0.0\lib\netstandard2.0\AsmResolver.PE.File.dll</HintPath>
+    <Reference Include="AsmResolver.PE.File, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\AsmResolver.PE.File.5.1.0\lib\netstandard2.0\AsmResolver.PE.File.dll</HintPath>
     </Reference>
-    <Reference Include="AsmResolver.PE.Win32Resources, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\AsmResolver.PE.Win32Resources.5.0.0\lib\netstandard2.0\AsmResolver.PE.Win32Resources.dll</HintPath>
+    <Reference Include="AsmResolver.PE.Win32Resources, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\AsmResolver.PE.Win32Resources.5.1.0\lib\netstandard2.0\AsmResolver.PE.Win32Resources.dll</HintPath>
     </Reference>
-    <Reference Include="AsmResolver.Symbols.Pdb, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\AsmResolver.Symbols.Pdb.5.0.0\lib\netstandard2.0\AsmResolver.Symbols.Pdb.dll</HintPath>
+    <Reference Include="AsmResolver.Symbols.Pdb, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\AsmResolver.Symbols.Pdb.5.1.0\lib\netstandard2.0\AsmResolver.Symbols.Pdb.dll</HintPath>
     </Reference>
     <Reference Include="dnlib, Version=3.6.0.0, Culture=neutral, PublicKeyToken=50e96378b6e77999, processorArchitecture=MSIL">
       <HintPath>packages\dnlib.3.6.0\lib\net45\dnlib.dll</HintPath>
@@ -99,6 +99,7 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Protections\AntiILDasm.cs" />
     <Compile Include="Protections\AntiManipulation.cs" />
+    <Compile Include="Protections\HideEntryPoint.cs" />
     <Compile Include="Protections\ImportProtection.cs" />
     <Compile Include="Protections\LimitedCallProtection.cs" />
     <Compile Include="Protections\ConstantMelter.cs" />
