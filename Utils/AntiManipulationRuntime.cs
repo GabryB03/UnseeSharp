@@ -57,9 +57,11 @@ public class AntiManipulationRuntime
     private static extern unsafe bool VirtualProtect(byte* lpAddress, int dwSize, uint flNewProtect, out uint lpflOldProtect);
 
     private static int MainThreadID = -1;
+    private static Thread MainThread = null;
 
     public static void RunAll()
     {
+        MainThread = Thread.CurrentThread;
         MainThreadID = AppDomain.GetCurrentThreadId();
         InitializeTheAntiDump();
 
@@ -347,6 +349,12 @@ public class AntiManipulationRuntime
             }
 
             if (!found)
+            {
+                Type.GetType("System.Environment").GetMethod("Exit").Invoke(null, new object[] { 0 });
+                return;
+            }
+
+            if (MainThread == null || !MainThread.IsAlive)
             {
                 Type.GetType("System.Environment").GetMethod("Exit").Invoke(null, new object[] { 0 });
                 return;

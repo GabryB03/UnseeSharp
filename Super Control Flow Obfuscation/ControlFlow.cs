@@ -2,7 +2,6 @@
 using dnlib.DotNet.Emit;
 using dnlib.DotNet.Pdb;
 using System.Linq;
-using System.Collections.Generic;
 using static SugarGuard.Protections.ControlFlow.BlockParser;
 
 namespace SugarGuard.Protections.ControlFlow
@@ -11,29 +10,31 @@ namespace SugarGuard.Protections.ControlFlow
     {
         public static void Execute(ModuleDefMD context)
         {
-            var cctor = context.GlobalType.FindOrCreateStaticConstructor();
-            var otherCctor = context.GlobalType.FindOrCreateStaticConstructor();
             foreach (TypeDef type in context.GetTypes())
             {
                 if (type.Namespace == "Costura")
+                {
                     continue;
+                }
+
                 foreach (MethodDef method in type.Methods)
                 {
-                    if (!method.HasBody || !method.Body.HasInstructions) continue;
-                    if (method.ReturnType != null)
+                    if (!method.HasBody || !method.Body.HasInstructions)
                     {
-                        if (cctor == method || cctor == otherCctor)
-                            continue;
-                        PhaseControlFlow(method, context);
+                        continue;
                     }
 
+                    if (method.ReturnType != null)
+                    {
+                        PhaseControlFlow(method, context);
+                    }
                 }
             }
         }
 
         public static void PhaseControlFlow(MethodDef method, ModuleDefMD context)
         {
-            var body = method.Body;
+            CilBody body = method.Body;
             body.SimplifyBranches();
 
             ScopeBlock root = ParseBody(body);
@@ -59,7 +60,7 @@ namespace SugarGuard.Protections.ControlFlow
 
             foreach (ExceptionHandler eh in body.ExceptionHandlers)
             {
-                var index = body.Instructions.IndexOf(eh.TryEnd) + 1;
+                int index = body.Instructions.IndexOf(eh.TryEnd) + 1;
                 eh.TryEnd = index < body.Instructions.Count ? body.Instructions[index] : null;
                 index = body.Instructions.IndexOf(eh.HandlerEnd) + 1;
                 eh.HandlerEnd = index < body.Instructions.Count ? body.Instructions[index] : null;
