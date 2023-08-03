@@ -109,6 +109,7 @@
     <Compile Include="Protections\LimitedIntegerConfusion.cs" />
     <Compile Include="Protections\MoveEntryPoint.cs" />
     <Compile Include="Protections\NumberObfuscation.cs" />
+    <Compile Include="Protections\OpCodesProtection.cs" />
     <Compile Include="Protections\StackUnderflow.cs" />
     <Compile Include="Protections\StringPooler.cs" />
     <Compile Include="Super Control Flow Obfuscation\ControlFlow.cs" />

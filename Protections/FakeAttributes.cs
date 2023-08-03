@@ -37,7 +37,15 @@ public class FakeAttributes
         "CryptoObfuscator",
         "WTF",
         "OiCuntJollyGoodDayYeHavin_____________________________________________________",
-        "OiCuntJollyGoodDayYeHavin"
+        "OiCuntJollyGoodDayYeHavin",
+        "Borland.Vcl.Types",
+        "Borland.Eco.Interfaces",
+        "Oliviay",
+        "____KILL",
+        "CheckRuntime",
+        "Sixxpack",
+        "CodeWallTrialVersion",
+        "Protected_By_Attribute'00'NETSpider.Attribute"
     };
 
     public static void Process(ModuleDefMD module)

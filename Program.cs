@@ -55,6 +55,7 @@ public class Program
             LimitedIntegerConfusion.Process(module);
             Renamer.Process(module);
             FakeAttributes.Process(module);
+            OpCodesProtection.Process(module);
 
             module.Write(stringsPath, options);
             module.Dispose();
